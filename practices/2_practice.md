@@ -5,7 +5,7 @@ Concevez un manifest pour entraîner votre modèle Tensorflow sur le jeu de donn
 Pour cela vous aurez besoin de construire une image Docker avec les dépendances nécessaires pour executer votre script.
 Un example avec Tensorflow:
 ```Dockerfile
-FROM tensorflow/tensorflow:2.13.0rc2
+FROM tensorflow/tensorflow:2.15.0
 
 COPY train.py .
 
@@ -15,14 +15,12 @@ CMD ["python", "./train.py"]
 Pour pousser votre image vers Google Artifact Registry:
 
 ```bash
-docker build -t kubeflow-training .
+docker build -t <DOCKER_IMAGE_URI> .
 ````
 
+
 ```bash
-docker tag kubeflow-training northamerica-northeast1-docker.pkg.dev/kubeflow-formation/$USER_ID/kubeflow-training # Replace USER_ID with either user1 or user2.
-```
-```bash
-docker push northamerica-northeast1-docker.pkg.dev/kubeflow-formation/$USER_ID/kubeflow-training # Replace USER_ID with either user1 or user2.
+docker push <DOCKER_IMAGE_URI>
 ```
 
 # Training Operator 2: SDK with API Objects
@@ -43,7 +41,7 @@ Concevez un script utilisant la méthode `create_tfjob_from_func` du `TrainingCl
 # Training Operator 4: Integrate the part 2 into an ML Pipeline
 
 
-Utiliez le script développé dans `Training Operator 2` et intégrez le dans votre pipeline d'entraînement.
+Utiliez le script développé dans `Training Operator 2` et intégrez le dans une pipeline Kubeflow. Puis executez la pipeline.
 
 
 

@@ -3,40 +3,36 @@ from kfp.v2 import dsl
 from kfp import compiler
 from kfp.v2.dsl.experimental import component, Output, Dataset, Model, Input
 
-@dsl.component(packages_to_install=["pandas", "scikit-learn"])
-def load_data(dataset: Output[Dataset]):
-    from sklearn.datasets import load_iris
+@dsl.component(packages_to_install=["pandas"])
+def create_dataset(dataset: Output[Dataset]):
     import pandas as pd
 
-
-    iris = load_iris()
-
-    iris_df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+    data = {
+        'number': range(1, 101),
+        'square': [x**2 for x in range(1, 101)]
+    }
     
-    
-    iris_df.to_csv(dataset.path, index=False)
+    df = pd.DataFrame(data)
+    df.to_csv(dataset.path, index=False)
 
 
-@dsl.component(packages_to_install=["pandas", "scikit-learn"])
-def preprocess_data(dataset: Input[Dataset], preprocessed_dataset: Output[Dataset]):
+@dsl.component(packages_to_install=["pandas"])
+def operations(dataset: Input[Dataset], preprocessed_dataset: Output[Dataset]):
     import pandas as pd
-    from sklearn.preprocessing import StandardScaler
     
     df = pd.read_csv(dataset.path)
     
-    preprocessed_data = StandardScaler().fit_transform(df)
+    df['cube'] = df['number'] ** 3
+    df['normalized'] = df['number'] / 10
     
-    preprocessed_df = pd.DataFrame(preprocessed_data, columns=df.columns)
-    
-    
-    preprocessed_df.to_csv(preprocessed_dataset.path)
+    df.to_csv(preprocessed_dataset.path, index=False)
     
     
 @dsl.pipeline(name="sample-pipeline")
 def sample_pipeline():
     
-    load_data_op = load_data()
-    preprocess_data_op = preprocess_data(dataset=load_data_op.outputs['dataset'])
+    create_dataset_op = create_dataset()
+    operations_op = operations(dataset=create_dataset_op.outputs['dataset'])
     
     
 if __name__=="__main__":    

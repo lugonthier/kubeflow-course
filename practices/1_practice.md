@@ -6,7 +6,7 @@ Pour cela il suffit d'installer les librairies du fichier [requirements.txt](req
 
 # 1 - Pipeline d'entraînement
 
-Dans cette première pratique vous devez créer une pipeline d'entraînement ayant pour but de produire un modèle pour le jeu de données MNIST. Veilliez à créer des composants logiques et ayant une seule fonction.
+Dans cette première pratique vous devez créer une pipeline d'entraînement ayant pour but de produire un modèle scikit-learn pour le jeu de données Iris de Fisher. Veilliez à créer des composants logiques et ayant une seule fonction.
 
 
 Pour démarrer avec Kubeflow Pipelines vous pouvez vous inspirez de la pipeline dans le fichier [sample_pipeline.py](pipelines/sample_pipeline.py). Pour executer cette pipeline il vous suffit simplement d'ajouter votre username et password dans le `KFPClientManager`.

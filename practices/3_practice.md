@@ -20,10 +20,10 @@ Pour plus d'information sur comment déclarer les objets, suivez la documentatio
 
 # Katib 3: SDK with high level interface
 
-Concevez un script utilisant la méthode `tune` du `KatibClient` pour optimiser votre modèle.
+Concevez un script utilisant la méthode `tune` du `KatibClient` pour optimiser cette fois-ci le modèle de classification des iris créé dans la pratique 2 sur KFP.
 
 Vous pouvez trouver un example de comment l'utiliser ici: [tune-train-from-func.ipynb](https://github.com/kubeflow/katib/blob/master/examples/v1beta1/sdk/tune-train-from-func.ipynb)
 
 # Katib 4: Integrate part 2 into KFP.
 
-Dans le chapitre 2 sur KFP vous avez conçu une pipeline d'entraînement. Intégrez la partie `Katib 2: SDK with API Objects` dans votre pipeline pour optimiser le modèle.
+Dans le chapitre 2 sur KFP vous avez conçu une pipeline d'entraînement. Intégrez la partie `Katib 3` dans votre pipeline pour optimiser le modèle.
