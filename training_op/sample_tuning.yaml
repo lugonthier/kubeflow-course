@@ -1,0 +1,41 @@
+apiVersion: kubeflow.org/v1
+kind: TFJob
+metadata:
+  name: ${job_name}
+  namespace: ${namespace}
+spec:
+  runPolicy:
+    cleanPodPolicy: None
+    schedulingPolicy: {}
+  tfReplicaSpecs:
+    Worker:
+      replicas: 1
+      restartPolicy: Never
+      template:
+        metadata:
+          name: ${job_name}
+          namespace: ${namespace}
+          annotations:
+            sidecar.istio.io/inject: "false"
+        spec:
+          containers:
+            - name: python-container
+              image: python:3.8-slim
+              command: ["python", "-c"]
+              args: ["print('Hello World')"]
+              resources:
+                limits:
+                  memory: "1Gi"
+                  cpu: "0.75"
+              imagePullPolicy: Always
+              volumeMounts:
+                - name: google-cloud-key
+                  mountPath: /var/secrets/google
+                  readOnly: true
+              env:
+                - name: GOOGLE_APPLICATION_CREDENTIALS
+                  value: "/var/secrets/google/google-key.json"
+          volumes:
+            - name: google-cloud-key
+              secret:
+                secretName: gcp-sa

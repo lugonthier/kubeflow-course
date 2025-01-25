@@ -1,0 +1,5 @@
+kfp==1.8.22
+kubeflow-katib==0.15.0
+kubeflow-training==1.6.0
+#tensorflow==2.13.0
+#tensorflow-datasets

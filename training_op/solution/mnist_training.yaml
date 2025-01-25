@@ -1,0 +1,49 @@
+apiVersion: kubeflow.org/v1
+kind: TFJob
+metadata:
+  name:  training-job-tf-1
+  namespace: team-1-prod
+spec:
+  runPolicy:
+    cleanPodPolicy: None
+    schedulingPolicy: {}
+  tfReplicaSpecs:
+    Worker:
+      replicas: 1
+      restartPolicy: Never
+      template:
+        metadata:
+          name: training
+          namespace: team-1-prod
+          annotations:
+            sidecar.istio.io/inject: "false"
+        spec:
+          containers:
+            - name: tensorflow
+              image: lugonthil/training-op-tf@sha256:2a356f170bd7181ebd69e43f101490be2fec01df507d33bc954f4905bb2e3a8c
+                - python
+                - "./train.py"
+                - "--lr"
+                - "0.01"
+                - "--num_epoch"
+                - "3"  
+                - "--train_dataset_path"
+                - "gs://deploykf-artifact-store-deploykf/preprocessed_dataset" 
+                - "--model_artifact_path"
+                - "gs://deploykf-artifact-store-deploykf/tf_model_artifact"  
+              resources:
+                limits:
+                  memory: "1Gi"
+                  cpu: "0.75"
+              imagePullPolicy: Always
+              # volumeMounts:
+              #   - name: google-cloud-key
+              #     mountPath: /var/secrets/google
+              #     readOnly: true
+              # env:
+              #   - name: GOOGLE_APPLICATION_CREDENTIALS
+              #     value: "/var/secrets/google/google-key.json"
+          # volumes:
+          #   - name: google-cloud-key
+          #     secret:
+          #       secretName: gcp-sa
