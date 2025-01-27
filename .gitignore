@@ -1,7 +1,6 @@
 infrastructure/kubeflow/deploykf
 .terraform
-# solutions
-**/solution/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
