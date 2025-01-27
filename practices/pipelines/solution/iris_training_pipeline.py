@@ -14,7 +14,7 @@ def training_pipeline():
     evaluate_model(
         test_dataset=load_and_split_data_op.outputs['test_dataset'],
         model_artifact=train_model_op.outputs['model_artifact']
-    )
+    ).set_caching_options(enable_caching=True)
     
     
     

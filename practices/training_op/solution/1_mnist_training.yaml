@@ -1,0 +1,36 @@
+apiVersion: kubeflow.org/v1
+kind: TFJob
+metadata:
+  name:  training-job-tf-5
+  namespace: team-1
+spec:
+  runPolicy:
+    cleanPodPolicy: None
+    schedulingPolicy: {}
+  tfReplicaSpecs:
+    Worker:
+      replicas: 1
+      restartPolicy: Never
+      template:
+        metadata:
+          name: training
+          namespace: team-1
+          annotations:
+            sidecar.istio.io/inject: "false"
+        spec:
+          containers:
+            - name: tensorflow
+              image: lugonthil/training-op-tf
+              command:
+                - python
+                - "./train.py"
+                - "--lr"
+                - "0.01"
+                - "--num_epoch"
+                - "3"  
+              resources:
+                limits:
+                  memory: "1Gi"
+                  cpu: "0.75"
+              imagePullPolicy: Always
+          restartPolicy: OnFailure
