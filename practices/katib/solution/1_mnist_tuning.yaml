@@ -1,0 +1,52 @@
+apiVersion: kubeflow.org/v1beta1
+kind: Experiment
+metadata:
+  name: katib-exp-1
+  namespace: team-1
+spec:
+  maxTrialCount: 3
+  parallelTrialCount: 1
+  maxFailedTrialCount: 1
+  objective:
+    type: maximize
+    objectiveMetricName: accuracy
+  parameters:
+    - name: lr
+      parameterType: double
+      feasibleSpace:
+        min: "0.001"
+        max: "0.1"
+  algorithm:
+    algorithmName: random
+  earlyStopping:
+    algorithmName: medianstop
+    algorithmSettings:
+      - name: min_trials_required
+        value: "5"
+  trialTemplate:
+    primaryContainerName: training-container
+    trialParameters:
+      - name: LearningRate
+        description: Optimizer Learning Rate
+        reference: lr
+    trialSpec:
+      apiVersion: batch/v1
+      kind: Job
+      spec:
+        template:
+          metadata:
+            annotations:
+              sidecar.istio.io/inject: "false"
+          spec:
+            containers:
+              - name: training-container
+                image: lugonthil/katib-op-tf-mnist@sha256:cf22ea588064c5cc4d484ff8ced069eead711ea0ad45b0baf9097e5afc125d61
+                imagePullPolicy: Always
+                command:
+                  - python
+                  - "./train.py"
+                  - "--lr=${trialParameters.LearningRate}"
+                  - "--num_epoch=10"
+                  - "--is_dist=False"
+                  - "--num_workers=1"
+            restartPolicy: Never
